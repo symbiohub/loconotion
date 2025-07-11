@@ -1,0 +1,26 @@
+name: Deploy Notion site
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */1 * * *'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Build and Deploy
+        uses: leoncvlt/loconotion-action@v1.0.0
+        with:
+          notion_page: ${{ secrets.NOTION_PAGE }}
+          notion_token: ${{ secrets.NOTION_TOKEN }}
+          output_dir: 'site'
+      
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
